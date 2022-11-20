@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends,Response, status,HTTPException
 from typing import List
 from .. import schemas, models, database
-
+from ..oauth2 import get_current_user
 from sqlalchemy.orm import Session
 
 from ..database import get_db
@@ -14,7 +14,7 @@ router= APIRouter(
 
 
 @router.get('/blog',response_model=List[schemas.ShowBlog])
-def all(db:Session= Depends(get_db)):
+def all(db:Session= Depends(get_db), current_user:schemas.User=Depends(get_current_user)):
     blogs=db.query(models.Blog).all()
     return blogs
 
